@@ -67,7 +67,7 @@ const int PRZES_Y=50;
 void PlanszaFrontend::paintEvent(QPainter *painter)
 {
     int zbiteX= PRZES_X+450;
-    int zbiteY= PRZES_Y+20;
+    int zbiteY= PRZES_Y+40;
     qInfo()<<zbiteBiale.size();
     qInfo()<<zbiteCzarne.size();
     // if(zbiteBiale.size()>0){
@@ -76,14 +76,24 @@ void PlanszaFrontend::paintEvent(QPainter *painter)
     for(int x=0;x<zbiteBiale.size();x++){
 
         zbiteBiale[x]->paintEvent(painter,zbiteX,zbiteY);
-        zbiteY+=40;
+        zbiteY+=50;
+        if(x==7){
+            zbiteX+=50;
+            zbiteY=PRZES_Y+40;
+        }
 
     }
-    zbiteX+=100;
-    zbiteY =PRZES_Y +20;
+    zbiteX=PRZES_X+550;
+    zbiteY =PRZES_Y +40;
     for(int x=0;x<zbiteCzarne.size();x++){
+
         zbiteCzarne[x]->paintEvent(painter,zbiteX,zbiteY);
-        zbiteY+=40;
+        zbiteY+=50;
+        if(x==7){
+            zbiteX+=50;
+            zbiteY=PRZES_Y+40;
+
+        }
 
     }
    //QPainter painter(this);
@@ -109,6 +119,7 @@ void PlanszaFrontend::paintEvent(QPainter *painter)
      //  r2.moveCenter(m_lastPos);
         QString tekst = "RUCH ";
         Kolor czyjRuch= plansza.czyjaTura();
+        //qInfo()<<"to jest AKTUALNY KOLOR "<<czyjRuch;
         if(czyjRuch==Bialy){
             tekst+="BIALYCH";
         }
@@ -154,10 +165,42 @@ void PlanszaFrontend::mousePressEvent(QMouseEvent *event){
     int x = (event->pos().x()- PRZES_X) / ROZMIAR;
     int y = (event->pos().y()- PRZES_Y) / ROZMIAR;
     m_lastPos = event->pos();
+    Kolor czyjRuch= plansza.czyjaTura();
     //std::cout<<event->pos().x();
     qInfo()<<"to jest wartosc x"<<x<<" "<<"to jest wartosc y"<<y;
-    if(x<0||x>7||y<0||y>7)
+    qInfo()<<"to jest AKTUALNY KOLOR test"<<czyjRuch;
+    if(staryX!=-1 && x>8 && x<13 && y>=0 && y<8 && plansza.zamienFigure(staryX,staryY,czyjRuch,y,x))
+    {    if(x==10 || x==12)
+        {
+           y+=8;
+        }
+       qInfo()<<"TO JEST MIEJSCE ZMIANY PIONKA STARY X STARY Y NOWY X I NOWY Y "<<staryX<<" "<<staryY<<" "<<x<<" "<<y;
+        FiguraFrontend* bufor=figury[staryX][staryY];
+        if(czyjRuch==Bialy){
+            if(y>zbiteBiale.size()-1){
+                return;
+            }
+            qInfo()<<"TO JEST MIEJSCE zamiany bialego ";
+            figury[staryX][staryY]=zbiteBiale[y];
+            zbiteBiale[y]=bufor;
+           return ;
+        }
+        if(czyjRuch==Czarny){
+            if(y>zbiteCzarne.size()-1){
+                return;
+            }
+            qInfo()<<"TO JEST MIEJSCE zamiany bialego ";
+            figury[staryX][staryY]=zbiteCzarne[y];
+            zbiteCzarne[y]=bufor;
+            return ;
+        }
+
+
+    }
+
+    if(x<0||(x>7&&x<9)||x>12||y<0||y>7)
         return;
+    qInfo()<<"TO JEST Xxxxxxxx125 "<<staryX<<" "<<staryY<<" "<<x<<" "<<y;
     if(staryX==-1){
         if(figury[x][y]==nullptr){
             return;
@@ -170,7 +213,7 @@ void PlanszaFrontend::mousePressEvent(QMouseEvent *event){
         staryX=-1;
         return;
     }
-    qInfo()<<"TO JEST X "<<staryX<<" "<<staryY<<" "<<x<<" "<<y;
+    qInfo()<<"TO JEST Xxxxxxxx "<<staryX<<" "<<staryY<<" "<<x<<" "<<y;
     //
     WynikRuchu wynik =plansza.przesunFigure(staryX,staryY,x,y);
     if(wynik==Bicie){

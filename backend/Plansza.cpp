@@ -96,11 +96,11 @@ WynikRuchu Plansza::przesunFigure(int staryX, int staryY, int nowyX, int nowyY) 
 bool Plansza::czyMomentZamiany(int x, int y) {
     // Czy pionek znajduje w ostatnim rzedzie
     if (mapa[x][y]->kolor == Bialy) {
-        if (x != 7) {
+        if (y != 7) {
             return false;
         }
     } else {
-        if (x != 0) {
+        if (y != 0) {
             return false;
         }
     }
@@ -150,26 +150,32 @@ WynikRuchu Plansza::zmienPozycje(int staryX, int staryY, int nowyX, int nowyY) {
     return BrakBicia;
 }
 
-bool Plansza::zamienFigure(int x, int y, Kolor kolor, int nrFigury) {
+bool Plansza::zamienFigure(int x, int y, Kolor kolor, int nrFigury,int xx) {
     if(!czyMomentZamiany(x, y)) {
         return false;
+    }
+    if(xx==10 || xx==12)
+    {
+        nrFigury+=8;
     }
 
     Figura* bufor = mapa[x][y];
     if (kolor == Bialy) {
         if(nrFigury > zbiteBialeFigury.size() - 1) {
-            return false;
+           return false;
         }
-        mapa[x][y] = zbiteBialeFigury[nrFigury];
+       mapa[x][y] = zbiteBialeFigury[nrFigury];
         zbiteBialeFigury[nrFigury] = bufor;
+       poprzednikolor= przeciwnyKolor(poprzednikolor);
         return true;
-    }
+   }
 
     if(nrFigury > zbiteCzarneFigury.size() - 1) {
         return false;
     }
-    mapa[x][y] = zbiteCzarneFigury[nrFigury];
-    zbiteCzarneFigury[nrFigury] = bufor;
+   mapa[x][y] = zbiteCzarneFigury[nrFigury];
+   zbiteCzarneFigury[nrFigury] = bufor;
+   poprzednikolor= przeciwnyKolor(poprzednikolor);
     return true;
 };
 

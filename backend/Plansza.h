@@ -25,7 +25,7 @@ public:
     bool czyMomentZamiany(int x, int y);
     bool czySzach(Kolor kolorKrola);
     Kolor czyjaTura();
-    bool zamienFigure(int x, int y, Kolor kolor, int nrFigury);
+    bool zamienFigure(int x, int y, Kolor kolor, int nrFigury,int xx);
 
 };
 
